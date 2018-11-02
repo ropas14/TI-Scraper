@@ -101,7 +101,7 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
 
     console.log("visiting page ----- " + "http:" + nextPg)
     // visit next page
-    await page.goto("http:" + nextPg, { waitUntil: 'networkidle2', timeout: 0 });
+    await page.goto("http:" + nextPg);
     await page.waitForSelector('ul.pkgOptions')
     await page.click("ul.pkgOptions li a");
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_3.jpg', type: 'jpeg', fullPage: true });
