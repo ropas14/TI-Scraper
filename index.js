@@ -11,7 +11,7 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 900 });
-    await page.goto(startUrl);
+    await page.goto(startUrl,{ waitUntil: 'networkidle2' , timeout:0});
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_1.jpg', type: 'jpeg', fullPage: true });
 
     let tableTitle = await page.evaluate(() => {
@@ -65,7 +65,7 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
 
     console.log("visiting page " + nextPage);
     // visit next page
-    await page.goto(nextPage);
+    await page.goto(nextPage,{ waitUntil: 'networkidle2' , timeout:0});
 
     let tb2data = await page.evaluate(() => {
         let titles = document.querySelectorAll('table#tblResults th');
@@ -101,7 +101,7 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
 
     console.log("visiting page ----- " + "http:" + nextPg)
     // visit next page
-    await page.goto("http:" + nextPg);
+    await page.goto("http:" + nextPg,{ waitUntil: 'networkidle2' , timeout:0});
     await page.waitForSelector('ul.pkgOptions')
     await page.click("ul.pkgOptions li a");
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_3.jpg', type: 'jpeg', fullPage: true });
@@ -116,7 +116,7 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
 
     const pdfLink = "http:" + pdfPage;
     // visit next page
-    await page.goto(pdfLink, { waitUntil: 'networkidle2' });
+    await page.goto(pdfLink, { waitUntil: 'networkidle2' , timeout:0});
 
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_4.jpg', type: 'jpeg', fullPage: true });
     
