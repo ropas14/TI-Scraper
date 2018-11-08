@@ -4,7 +4,6 @@ const readpdfile = require('./readpdf.js')
 const fs = require('fs');
 
 let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview.html';
-//let nextPage ='http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/products.html#p2098=2%20C66x&p815=ECC';
 
 (async () => {
 
@@ -15,8 +14,8 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
     await page.setViewport({ width: 1920, height: 900 });
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36');
 
-    await page.goto(startUrl,{ waitUntil: 'networkidle2', timeout: 0 });
-    //await page.waitForSelector("div.dataTableEnhanced.parbase");
+    page.goto(startUrl,{ waitUntil: 'networkidle2', timeout: 0 });
+    await page.waitForSelector("div.dataTableEnhanced.parbase");
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_1.jpg', type: 'jpeg', fullPage: true });
     let tableTitle = await page.evaluate(() => {
         return document.querySelector('h3.ti_table-title p').innerText.trim();
@@ -68,9 +67,10 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
     });
 
     console.log("visiting page " + nextPage);
-    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36');
     // visit next page
-    await page.goto(nextPage, {waitUntil: 'load', timeout: 0});
+    //page.goto(nextPage, {waitUntil: 'load', timeout: 0});
+     page.click('table.ti_table th:nth-of-type(2) h4 a');
+    await page.waitForSelector('table#tblResults tbody');
 
     let tb2data = await page.evaluate(() => {
         let titles = document.querySelectorAll('table#tblResults th');
@@ -96,7 +96,6 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
     await page.click('tr#AM5746 a');
     await page.waitForSelector('tr#rstid_AM5746');
     await page.click("tr#rstid_AM5746 ul.pdf li.html a");
-   // await page.waitForSelector('div.c3 a img');
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_2.jpg', type: 'jpeg', fullPage: true });
 
     var nextPg = await page.evaluate(() => {
@@ -107,9 +106,8 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
     console.log("visiting page ----- " + "http:" + nextPg);
     await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36');
     // visit next page
-    await page.goto("http:" + nextPg , {waitUntil: 'load', timeout: 0});
+     page.goto("http:" + nextPg , {waitUntil: 'load', timeout: 0});
     await page.waitForSelector('ul.pkgOptions')
-    //await page.click("ul.pkgOptions li a");
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_3.jpg', type: 'jpeg', fullPage: true });
 
     var pdfPage = await page.evaluate(() => {
@@ -123,7 +121,8 @@ let startUrl = 'http://www.ti.com/processors/sitara-arm/am5x-cortex-a15/overview
 
     const pdfLink = "http:" + pdfPage;
     // visit next page
-    await page.goto(pdfLink , {waitUntil: 'load', timeout: 0});
+    page.goto(pdfLink , {waitUntil: 'load', timeout: 0});
+    await page.waitForSelector('embed#plugin')
     await page.screenshot({ path: './screenshots/_sitara-arm_AM574x_4.jpg', type: 'jpeg', fullPage: true });
 
     let linkarray = await pdfLink.split('/');
